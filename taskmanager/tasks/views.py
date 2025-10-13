@@ -3,22 +3,13 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Task
 from .serializers import TaskSerializer
-from rest_framework import viewsets, permissions
 
 class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Task.objects.all()  # ✅ Add this line
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        return Task.objects.filter(user=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-        from rest_framework.decorators import action
-from rest_framework.response import Response
-
-class TaskViewSet(viewsets.ModelViewSet):
-    ...
+    # Optional: Allow users to toggle completion
     @action(detail=True, methods=['post'])
     def mark_complete(self, request, pk=None):
         task = self.get_object()
