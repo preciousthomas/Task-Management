@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 
-
 class Task(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -12,6 +11,13 @@ class Task(models.Model):
     description = models.TextField(blank=True)
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.title
+
+    def __repr__(self):
+        return f"<Task {self.title} (completed={self.completed})>"
