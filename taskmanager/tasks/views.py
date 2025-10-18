@@ -4,12 +4,19 @@ from rest_framework.decorators import action
 from .models import Task
 from .serializers import TaskSerializer
 
+
 class TaskViewSet(viewsets.ModelViewSet):
-    queryset = Task.objects.all()  # ✅ Add this line
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    # Optional: Allow users to toggle completion
+    def get_queryset(self):
+        """Show only the tasks that belong to the logged-in user."""
+        return Task.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        """Automatically assign the user when a task is created."""
+        serializer.save(user=self.request.user)
+
     @action(detail=True, methods=['post'])
     def mark_complete(self, request, pk=None):
         task = self.get_object()
