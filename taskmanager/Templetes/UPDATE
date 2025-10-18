@@ -1,0 +1,9 @@
+PATCH http://127.0.0.1:8000/api/tasks/1/
+Headers:
+Authorization: Bearer <your_access_token>
+Content-Type: application/json
+
+Body:
+{
+  "completed": true
+}
